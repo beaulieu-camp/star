@@ -3,7 +3,7 @@ import datetime
 import json
 
 url = "https://data.explore.star.fr/api/records/1.0/search/"
-url += "?dataset=tco-bus-circulation-passages-tr"
+url += "?dataset=tco-bus-circulation-passages-tr&timezone=Europe/Paris&rows=200"
 url += "&geofilter.polygon=(48.1115718311405,-1.647477149963379),(48.11274662400898,-1.634538173675537),(48.12247345006807,-1.6274142265319822),(48.12851776605501,-1.6274571418762207),(48.119221829479585,-1.650395393371582),(48.1115718311405,-1.647477149963379)"
 
 req = requests.get(url)
