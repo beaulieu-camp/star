@@ -16,14 +16,14 @@ obj_ret = {}
 for item in data["records"] : 
     id_ar = item["fields"]["idarret"]
 
-    if not obj_ret[id_ar] :
-        obj_ret[id_ar] = {"nom":item.fields.nomarret,"dessertes":[]}
+    if id_ar not in obj_ret :
+        obj_ret[id_ar] = {"nom":item["fields"]["nomarret"],"dessertes":[]}
 
-    obj_ret[id_ar].dessertes.append( [
-        item.fields.coordonnees,
-        item.fields.nomcourtligne,
-        item.fields.depart,
-        item.fields.destination,
+    obj_ret[id_ar]["dessertes"].append( [
+        item["fields"]["coordonnees"],
+        item["fields"]["nomcourtligne"],
+        item["fields"]["depart"],
+        item["fields"]["destination"],
 
 
         # item.fields.sens,
