@@ -1,11 +1,13 @@
 import requests
-import datetime
+from datetime import datetime,timedelta
 import json
 from io import BytesIO
 from zipfile import ZipFile
 import math
 import pytz
-tz = pytz.timezone('Europe/Paris')
+
+def to_timezone(date):
+    return pytz.timezone('Europe/Paris').localize(date, is_dst=None)
 
 def req_func(url):
     req = requests.get(url)
@@ -17,7 +19,7 @@ def days_from_intervalle(start, end):
     liste = []
     while temp < end:
         liste.append(temp)
-        temp += datetime.timedelta(days=1)
+        temp += timedelta(days=1)
     return liste
 
 urlhoraires = "https://data.explore.star.fr/api/records/1.0/search/?dataset=tco-busmetro-horaires-gtfs-versions-td&q=" 
@@ -51,8 +53,8 @@ for line in myzip.open("calendar.txt").readlines()[1:]:
     l = line.decode('utf-8').replace('"',"").replace('\n',"").split(",")
     jour = int( 6 - math.log2( int( "".join(l[1:8]) , 2 )))
 
-    start = datetime.datetime.strptime(l[8],'%Y%m%d').astimezone(tz)
-    end = datetime.datetime.strptime(l[9],'%Y%m%d').astimezone(tz)
+    start = to_timezone( datetime.strptime(l[8],'%Y%m%d') )
+    end =   to_timezone( datetime.strptime(l[9],'%Y%m%d') )
     dates = days_from_intervalle( start, end )
     id = l[0]
     calendar[id] = {
@@ -105,12 +107,10 @@ for line in myzip.open("stop_times.txt").readlines()[1:]:
             out_liste[arretid]["dessertes"][ligneid]["sens"][sens] = {"direction":direction,"horaires":[]}
         
         for date in dates:
-            date += datetime.timedelta(hours=hour,minutes=minute)
+            date += timedelta(hours=hour,minutes=minute)
             timestamp = int(date.timestamp())
-            print(date)
-            throw
             weakday = date.weekday()
-            if weakday == jour and datetime.datetime.now().astimezone(tz) < date:
+            if weakday == jour and datetime.now() < date:
                 
                 out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].append(timestamp)
                 out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].sort()
