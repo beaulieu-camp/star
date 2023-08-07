@@ -51,8 +51,8 @@ for line in myzip.open("calendar.txt").readlines()[1:]:
     l = line.decode('utf-8').replace('"',"").replace('\n',"").split(",")
     jour = int( 6 - math.log2( int( "".join(l[1:8]) , 2 )))
 
-    start = datetime.datetime.strptime(l[8],'%Y%m%d',tzinfo=tz)
-    end = datetime.datetime.strptime(l[9],'%Y%m%d',tzinfo=tz)
+    start = datetime.datetime.strptime(l[8],'%Y%m%d').replace(tzinfo=tz)
+    end = datetime.datetime.strptime(l[9],'%Y%m%d').replace(tzinfo=tz)
     dates = days_from_intervalle( start, end )
     id = l[0]
     calendar[id] = {
@@ -109,12 +109,10 @@ for line in myzip.open("stop_times.txt").readlines()[1:]:
             timestamp = int(date.timestamp())
 
             weakday = date.weekday()
-            if weakday == jour and datetime.datetime.now(tzinfo=tz) < date:
+            if weakday == jour and datetime.datetime.now(tz=tz) < date:
                     
                 out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].append(timestamp)
                 out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].sort()
-
-
 
 with open("./out/index.json","w+") as file:
     file.write(json.dumps(out_liste))
