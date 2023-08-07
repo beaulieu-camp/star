@@ -78,8 +78,9 @@ out_liste = {}
 # filtrage de tout
 for line in myzip.open("stop_times.txt").readlines()[1:]:
     l = line.decode('utf-8').replace('"',"").replace('\n',"").split(",")
-    id = l[3]
-    if id in arrets_filt.keys() :
+    arretid = l[3]
+    if arretid in arrets_filt.keys() :
+        arret = arrets_filt[arretid]
         trip = trips[l[0]]
         ligne = trip["ligne"]
         ligneid = trip["ligneid"]
@@ -92,11 +93,14 @@ for line in myzip.open("stop_times.txt").readlines()[1:]:
         hour = int(time[0])
         minute = int(time[1])
 
-        if ligneid not in out_liste:
-            out_liste[ligneid] = {"nom":ligne,"sens":{}}
+        if arretid not in out_liste:
+            out_liste[arretid] = {"nom":arret,"dessertes":{}}
 
-        if sens not in out_liste[ligneid]["sens"]:
-            out_liste[ligneid]["sens"][sens] = {"direction":direction,"dessertes":{}}
+        if ligneid not in out_liste[arretid]["dessertes"]:
+            out_liste[arretid]["dessertes"][ligneid] = {"nom":ligne,"sens":{}}
+
+        if sens not in out_liste[arretid]["dessertes"][ligneid]["sens"]:
+            out_liste[arretid]["dessertes"][ligneid]["sens"][sens] = {"direction":direction,"horaires":[]}
         
         for date in dates:
             date += datetime.timedelta(hours=hour,minutes=minute)
@@ -104,12 +108,9 @@ for line in myzip.open("stop_times.txt").readlines()[1:]:
 
             weakday = date.weekday()
             if weakday == jour and datetime.datetime.now() < date:
-
-                if id not in out_liste[ligneid]["sens"][sens]["dessertes"]:
-                    out_liste[ligneid]["sens"][sens]["dessertes"][id] = {"nom":arrets_filt[id],"horaires":[]}
                     
-                out_liste[ligneid]["sens"][sens]["dessertes"][id]["horaires"].append(timestamp)
-                out_liste[ligneid]["sens"][sens]["dessertes"][id]["horaires"].sort()
+                out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].append(timestamp)
+                out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].sort()
 
 
 
