@@ -96,7 +96,7 @@ for line in myzip.open("stop_times.txt").readlines()[1:]:
             out_liste[ligneid] = {"nom":ligne,"sens":{}}
 
         if sens not in out_liste[ligneid]["sens"]:
-            out_liste[ligneid]["sens"][sens] = {"direction":direction,"horaires":{}}
+            out_liste[ligneid]["sens"][sens] = {"direction":direction,"dessertes":{}}
         
         for date in dates:
             date += datetime.timedelta(hours=hour,minutes=minute)
@@ -105,9 +105,9 @@ for line in myzip.open("stop_times.txt").readlines()[1:]:
             weakday = date.weekday()
             if weakday == jour and datetime.datetime.now() < date:
 
-                if id not in out_liste[ligneid]["sens"][sens]["horaires"]:
-                    out_liste[ligneid]["sens"][sens]["horaires"][id] = {"arret":arrets_filt[id],"date":[]}
-                out_liste[ligneid]["sens"][sens]["horaires"][id]["date"].append(timestamp)
+                if id not in out_liste[ligneid]["sens"][sens]["dessertes"]:
+                    out_liste[ligneid]["sens"][sens]["dessertes"][id] = {"arret":arrets_filt[id],"horaires":[]}
+                out_liste[ligneid]["sens"][sens]["dessertes"][id]["horaires"].append(timestamp)
 
 
 
