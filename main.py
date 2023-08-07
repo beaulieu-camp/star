@@ -110,7 +110,7 @@ for line in myzip.open("stop_times.txt").readlines()[1:]:
             date += timedelta(hours=hour,minutes=minute)
             timestamp = int(date.timestamp())
             weakday = date.weekday()
-            if weakday == jour and datetime.now() < date:
+            if weakday == jour and to_timezone(datetime.now()) < date:
                 
                 out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].append(timestamp)
                 out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].sort()
