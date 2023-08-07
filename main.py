@@ -107,7 +107,8 @@ for line in myzip.open("stop_times.txt").readlines()[1:]:
         for date in dates:
             date += datetime.timedelta(hours=hour,minutes=minute)
             timestamp = int(date.timestamp())
-
+            print(date)
+            throw
             weakday = date.weekday()
             if weakday == jour and datetime.datetime.now().astimezone(tz) < date:
                 
