@@ -23,7 +23,7 @@ def days_from_intervalle(start, end):
     return liste
 
 urlhoraires = "https://data.explore.star.fr/api/records/1.0/search/?dataset=tco-busmetro-horaires-gtfs-versions-td&q=" 
-urlarrets = "https://data.explore.star.fr/api/records/1.0/search/?dataset=tco-bus-topologie-pointsarret-td&q=&rows=200&geofilter.polygon=(48.1115718311405%2C-1.647477149963379)%2C(48.11274662400898%2C-1.634538173675537)%2C(48.12247345006807%2C-1.6274142265319822)%2C(48.12851776605501%2C-1.6274571418762207)%2C(48.119221829479585%2C-1.650395393371582)%2C(48.1115718311405%2C-1.647477149963379)"
+urlarrets = "https://data.explore.star.fr/api/records/1.0/search/?dataset=tco-bus-topologie-pointsarret-td&q=&rows=2000&sort=nom"
 urllignes = "https://data.explore.star.fr/api/records/1.0/search/?dataset=tco-bus-topologie-lignes-td&q=&rows=200&sort=id"
 
 # filtrage arrets
@@ -33,6 +33,9 @@ for arret in arrets :
     id = arret["fields"]["code"]
     nom = arret["fields"]["nom"]
     arrets_filt[id] = nom
+
+with open("./out/index.json","w+") as file:
+    file.write(json.dumps(arrets_filt))
 
 # a partir de la c'est le dawa
 urlzip = req_func(urlhoraires).json()["records"][0]["fields"]["url"]
@@ -115,6 +118,6 @@ for line in myzip.open("stop_times.txt").readlines()[1:]:
                 out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].append(timestamp)
                 out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].sort()
 
-
-with open("./out/index.json","w+") as file:
-    file.write(json.dumps(out_liste))
+for key in out_liste.keys():
+    with open("./out/"+key+".json","w+") as file:
+        file.write(json.dumps(out_liste[key]))
