@@ -100,14 +100,14 @@ for line in myzip.open("stop_times.txt").readlines()[1:]:
         hour = int(time[0])
         minute = int(time[1])
 
-        if arretid not in out_liste:
-            out_liste[arretid] = {"nom":arret,"dessertes":{}}
+        if arret not in out_liste:
+            out_liste[arret] = {"nom":arret,"dessertes":{}}
 
-        if ligneid not in out_liste[arretid]["dessertes"]:
-            out_liste[arretid]["dessertes"][ligneid] = {"nom":ligne,"sens":{}}
+        if ligneid not in out_liste[arret]["dessertes"]:
+            out_liste[arret]["dessertes"][ligneid] = {"nom":ligne,"sens":{}}
 
-        if sens not in out_liste[arretid]["dessertes"][ligneid]["sens"]:
-            out_liste[arretid]["dessertes"][ligneid]["sens"][sens] = {"direction":direction,"horaires":[]}
+        if sens not in out_liste[arret]["dessertes"][ligneid]["sens"]:
+            out_liste[arret]["dessertes"][ligneid]["sens"][sens] = {"direction":direction,"horaires":[]}
         
         for date in dates:
             date += timedelta(hours=hour,minutes=minute)
@@ -115,8 +115,8 @@ for line in myzip.open("stop_times.txt").readlines()[1:]:
             weakday = date.weekday()
             if weakday == jour and to_timezone(datetime.now()) < date:
                 
-                out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].append(timestamp)
-                out_liste[arretid]["dessertes"][ligneid]["sens"][sens]["horaires"].sort()
+                out_liste[arret]["dessertes"][ligneid]["sens"][sens]["horaires"].append(timestamp)
+                out_liste[arret]["dessertes"][ligneid]["sens"][sens]["horaires"].sort()
 
 for key in out_liste.keys():
     with open("./out/"+key+".json","w+") as file:
