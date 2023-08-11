@@ -35,7 +35,11 @@ for arret in arrets :
     arrets_filt[id] = nom
 
 with open("./out/index.json","w+") as file:
-    file.write(json.dumps(arrets_filt))
+    liste = []
+    for item in arrets_filt.values():
+        if item not in liste:
+            liste.append(item)
+    file.write(json.dumps(liste))
 
 # a partir de la c'est le dawa
 urlzip = req_func(urlhoraires).json()["records"][0]["fields"]["url"]
